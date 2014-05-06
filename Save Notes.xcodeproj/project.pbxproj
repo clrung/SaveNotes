@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F12B3906191927EA00016D95 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F12B3905191927EA00016D95 /* SettingsViewController.m */; };
 		F1DE089619158F550062267D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089519158F550062267D /* Foundation.framework */; };
 		F1DE089819158F550062267D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089719158F550062267D /* CoreGraphics.framework */; };
 		F1DE089A19158F550062267D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089919158F550062267D /* UIKit.framework */; };
@@ -23,9 +24,12 @@
 		F1DE08BD19158F5F0062267D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089919158F550062267D /* UIKit.framework */; };
 		F1DE08C519158F600062267D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1DE08C319158F600062267D /* InfoPlist.strings */; };
 		F1DE08C719158F600062267D /* Save_NotesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1DE08C619158F600062267D /* Save_NotesTests.m */; };
-		F1DE08D11916B0230062267D /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D01916B0230062267D /* DropboxSDK.framework */; };
-		F1DE08D31916B0AB0062267D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D21916B0AB0062267D /* Security.framework */; };
-		F1DE08D51916B0B40062267D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D41916B0B30062267D /* QuartzCore.framework */; };
+		F1DE08D91916C53D0062267D /* Dropbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D81916C53D0062267D /* Dropbox.framework */; };
+		F1DE08DB1916C5AE0062267D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08DA1916C5AE0062267D /* CFNetwork.framework */; };
+		F1DE08DC1916C5C20062267D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D21916B0AB0062267D /* Security.framework */; };
+		F1DE08DE1916C5CC0062267D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08DD1916C5CC0062267D /* SystemConfiguration.framework */; };
+		F1DE08DF1916C5D40062267D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08D41916B0B30062267D /* QuartzCore.framework */; };
+		F1DE08E11916C5ED0062267D /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE08E01916C5ED0062267D /* libc++.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F12B3904191927EA00016D95 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		F12B3905191927EA00016D95 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		F1DE089219158F550062267D /* Save Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Save Notes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DE089519158F550062267D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1DE089719158F550062267D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -61,9 +67,12 @@
 		F1DE08C219158F600062267D /* Save NotesTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Save NotesTests-Info.plist"; sourceTree = "<group>"; };
 		F1DE08C419158F600062267D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F1DE08C619158F600062267D /* Save_NotesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Save_NotesTests.m; sourceTree = "<group>"; };
-		F1DE08D01916B0230062267D /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		F1DE08D21916B0AB0062267D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F1DE08D41916B0B30062267D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F1DE08D81916C53D0062267D /* Dropbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Dropbox.framework; sourceTree = "<group>"; };
+		F1DE08DA1916C5AE0062267D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F1DE08DD1916C5CC0062267D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F1DE08E01916C5ED0062267D /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,9 +80,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1DE08D51916B0B40062267D /* QuartzCore.framework in Frameworks */,
-				F1DE08D31916B0AB0062267D /* Security.framework in Frameworks */,
-				F1DE08D11916B0230062267D /* DropboxSDK.framework in Frameworks */,
+				F1DE08E11916C5ED0062267D /* libc++.dylib in Frameworks */,
+				F1DE08DF1916C5D40062267D /* QuartzCore.framework in Frameworks */,
+				F1DE08DE1916C5CC0062267D /* SystemConfiguration.framework in Frameworks */,
+				F1DE08DC1916C5C20062267D /* Security.framework in Frameworks */,
+				F1DE08DB1916C5AE0062267D /* CFNetwork.framework in Frameworks */,
+				F1DE08D91916C53D0062267D /* Dropbox.framework in Frameworks */,
 				F1DE089819158F550062267D /* CoreGraphics.framework in Frameworks */,
 				F1DE089A19158F550062267D /* UIKit.framework in Frameworks */,
 				F1DE089619158F550062267D /* Foundation.framework in Frameworks */,
@@ -100,7 +112,6 @@
 				F1DE08C019158F5F0062267D /* Save NotesTests */,
 				F1DE089419158F550062267D /* Frameworks */,
 				F1DE089319158F550062267D /* Products */,
-				F1DE08D01916B0230062267D /* DropboxSDK.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,6 +127,10 @@
 		F1DE089419158F550062267D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1DE08E01916C5ED0062267D /* libc++.dylib */,
+				F1DE08DD1916C5CC0062267D /* SystemConfiguration.framework */,
+				F1DE08DA1916C5AE0062267D /* CFNetwork.framework */,
+				F1DE08D81916C53D0062267D /* Dropbox.framework */,
 				F1DE08D41916B0B30062267D /* QuartzCore.framework */,
 				F1DE08D21916B0AB0062267D /* Security.framework */,
 				F1DE089519158F550062267D /* Foundation.framework */,
@@ -137,6 +152,8 @@
 				F1DE08AE19158F5B0062267D /* SaveNotesMasterViewController.m */,
 				F1DE08B019158F5B0062267D /* SaveNotesDetailViewController.h */,
 				F1DE08B119158F5B0062267D /* SaveNotesDetailViewController.m */,
+				F12B3904191927EA00016D95 /* SettingsViewController.h */,
+				F12B3905191927EA00016D95 /* SettingsViewController.m */,
 				F1DE08B319158F5D0062267D /* Images.xcassets */,
 				F1DE089C19158F560062267D /* Supporting Files */,
 			);
@@ -273,6 +290,7 @@
 			files = (
 				F1DE08B219158F5B0062267D /* SaveNotesDetailViewController.m in Sources */,
 				F1DE08A219158F570062267D /* main.m in Sources */,
+				F12B3906191927EA00016D95 /* SettingsViewController.m in Sources */,
 				F1DE08AF19158F5B0062267D /* SaveNotesMasterViewController.m in Sources */,
 				F1DE08A619158F590062267D /* SaveNotesAppDelegate.m in Sources */,
 			);
@@ -499,6 +517,7 @@
 				F1DE08CC19158F600062267D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F1DE08CD19158F600062267D /* Build configuration list for PBXNativeTarget "Save NotesTests" */ = {
 			isa = XCConfigurationList;
@@ -507,6 +526,7 @@
 				F1DE08CF19158F600062267D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
