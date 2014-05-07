@@ -24,15 +24,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
     [self configureView];
 }
 
-- (id)initWithFile:(DBFile *)file {
-    if (!(self = [super init])) return nil;
-    
+- (void)setFile:(DBFile *)file {
     _file = file;
-
-    return self;
 }
 
 - (void)configureView

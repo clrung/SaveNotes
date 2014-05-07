@@ -11,10 +11,8 @@
 #import <Dropbox/Dropbox.h>
 
 @interface SaveNotesMasterViewController () {
-    NSMutableArray *_objects;
-    
+    NSMutableArray *_fileInfos;
 }
-@property (nonatomic, retain) DBPath *root;
 @end
 
 @implementation SaveNotesMasterViewController
@@ -40,12 +38,12 @@
     [self initDBAccount];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     BOOL isLinked = [self checkLinked];
     if (isLinked) {
-        ;
+        [self loadFiles];
     }
 }
 
@@ -66,13 +64,13 @@
     
     
     /*
-    
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
-    }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic]; */
+     
+     if (!_objects) {
+     _objects = [[NSMutableArray alloc] init];
+     }
+     [_objects insertObject:[NSDate date] atIndex:0];
+     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic]; */
 }
 
 //
@@ -84,8 +82,6 @@
         NSString *title = [alertView textFieldAtIndex:0].text;
         [self createNoteWithTitle:title];
     }
-    
-    // [self loadFiles];
 }
 
 //
@@ -94,26 +90,34 @@
 //
 - (BOOL)checkLinked {
     if(![[[DBAccountManager sharedManager] linkedAccount] isLinked]) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"No account found!" message:@"Please go to settings and link your Dropbox account."
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-          return NO;
+        [[[UIAlertView alloc] initWithTitle:@"No account found!"
+                                    message:@"Please go to settings and link your Dropbox account."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+        return NO;
     }
     return YES;
 }
 
+//
+// Creates a new text file with the specified title.  If the file is created
+// successfully, switches to the detail view controller.
+//
 - (void) createNoteWithTitle:(NSString*)title {
     NSString *fileName = [NSString stringWithFormat:@"%@.txt", title];
     DBPath *path = [[DBPath root] childPath:fileName];
     DBFile *file = [[DBFilesystem sharedFilesystem] createFile:path error:nil];
     
     if (!file) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"Unable to create note!" message:@"The filename may already exist."
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"Unable to create note!"
+                                    message:@"The filename may already exist."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
     } else {
-        SaveNotesDetailViewController *controller = [[SaveNotesDetailViewController alloc] initWithFile:file];
-        [self.navigationController pushViewController:controller animated:YES];
+        [_fileInfos addObject:file.info];
+        [self performSegueWithIdentifier:@"showDetail" sender:file];
     }
 }
 
@@ -126,6 +130,18 @@
     }
 }
 
+- (void)loadFiles {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+        NSArray *immContents = [[DBFilesystem sharedFilesystem] listFolder:[DBPath root] error:nil];
+        NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
+        //[mContents sortUsingFunction:sortFileInfos context:NULL];
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            _fileInfos = mContents;
+            [self.tableView reloadData];
+        });
+    });
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -133,28 +149,20 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _objects.count;
+    return _fileInfos.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    DBFileInfo *info = _objects[indexPath.row];
-    cell.textLabel.text = [info.path name];
+    DBFileInfo *fileInfo = _fileInfos[indexPath.row];
+    cell.textLabel.text = [[fileInfo.path name] stringByDeletingPathExtension];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DBFileInfo *info = _objects[indexPath.row];
-    DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
-    if (!file) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"Unable to open note!" message:@"An error has occurred."
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        return;
-    }
-    UIViewController *controller = [[SaveNotesDetailViewController alloc] initWithFile:file];
-    [self.navigationController pushViewController:controller animated:YES];
+    
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -164,34 +172,33 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_objects removeObjectAtIndex:indexPath.row];
+        [_fileInfos removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
 
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = _objects[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        SaveNotesDetailViewController *controller = segue.destinationViewController;
+        
+        if([sender isKindOfClass:[DBFile class]]) {
+            [controller setFile:sender];
+        } else {
+            DBFileInfo *info = _fileInfos[indexPath.row];
+            
+            DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
+            if (!file) {
+                [[[UIAlertView alloc]
+                  initWithTitle:@"Unable to open note!" message:@"An error has occurred."
+                  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                return;
+            }
+            [controller setFile:file];
+        }
     }
 }
 

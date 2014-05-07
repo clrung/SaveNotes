@@ -15,6 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 
-- (id)initWithFile:(DBFile *)file;
+- (void)setFile:(DBFile *)file;
 
 @end
