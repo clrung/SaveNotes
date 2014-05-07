@@ -13,5 +13,6 @@
 @interface SaveNotesMasterViewController : UITableViewController
 
 @property (strong, nonatomic) SaveNotesDetailViewController *detailViewController;
+@property (strong, nonatomic) NSMutableArray *fileInfos;
 
 @end

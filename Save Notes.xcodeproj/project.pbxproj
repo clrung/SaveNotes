@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F12B3906191927EA00016D95 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F12B3905191927EA00016D95 /* SettingsViewController.m */; };
+		F1B9C16B191AF8A90079D63B /* DropboxUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B9C16A191AF8A90079D63B /* DropboxUtils.m */; };
 		F1DE089619158F550062267D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089519158F550062267D /* Foundation.framework */; };
 		F1DE089819158F550062267D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089719158F550062267D /* CoreGraphics.framework */; };
 		F1DE089A19158F550062267D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1DE089919158F550062267D /* UIKit.framework */; };
@@ -45,6 +46,8 @@
 /* Begin PBXFileReference section */
 		F12B3904191927EA00016D95 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		F12B3905191927EA00016D95 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		F1B9C169191AF8A90079D63B /* DropboxUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DropboxUtils.h; path = model/DropboxUtils.h; sourceTree = "<group>"; };
+		F1B9C16A191AF8A90079D63B /* DropboxUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DropboxUtils.m; path = model/DropboxUtils.m; sourceTree = "<group>"; };
 		F1DE089219158F550062267D /* Save Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Save Notes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DE089519158F550062267D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1DE089719158F550062267D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -105,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F1B9C16C191AF8B20079D63B /* model */ = {
+			isa = PBXGroup;
+			children = (
+				F1B9C169191AF8A90079D63B /* DropboxUtils.h */,
+				F1B9C16A191AF8A90079D63B /* DropboxUtils.m */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
 		F1DE088919158F550062267D = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +167,7 @@
 				F12B3904191927EA00016D95 /* SettingsViewController.h */,
 				F12B3905191927EA00016D95 /* SettingsViewController.m */,
 				F1DE08B319158F5D0062267D /* Images.xcassets */,
+				F1B9C16C191AF8B20079D63B /* model */,
 				F1DE089C19158F560062267D /* Supporting Files */,
 			);
 			path = "Save Notes";
@@ -290,6 +303,7 @@
 			files = (
 				F1DE08B219158F5B0062267D /* SaveNotesDetailViewController.m in Sources */,
 				F1DE08A219158F570062267D /* main.m in Sources */,
+				F1B9C16B191AF8A90079D63B /* DropboxUtils.m in Sources */,
 				F12B3906191927EA00016D95 /* SettingsViewController.m in Sources */,
 				F1DE08AF19158F5B0062267D /* SaveNotesMasterViewController.m in Sources */,
 				F1DE08A619158F590062267D /* SaveNotesAppDelegate.m in Sources */,

@@ -8,11 +8,11 @@
 
 #import "SaveNotesMasterViewController.h"
 #import "SaveNotesDetailViewController.h"
+#import "DropboxUtils.h"
 #import <Dropbox/Dropbox.h>
 
-@interface SaveNotesMasterViewController () {
-    NSMutableArray *_fileInfos;
-}
+@interface SaveNotesMasterViewController ()
+
 @end
 
 @implementation SaveNotesMasterViewController
@@ -35,7 +35,7 @@
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (SaveNotesDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
-    [self initDBAccount];
+    [DropboxUtils initDBAccount];
     
     [self.refreshControl addTarget:self
                             action:@selector(loadFiles)
@@ -44,7 +44,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    BOOL isLinked = [self checkLinked];
+    BOOL isLinked = [DropboxUtils checkLinked];
     if (isLinked) {
         [self loadFiles];
     }
@@ -79,55 +79,6 @@
 }
 
 //
-// Displays an alert if the user hasn't linked a Dropbox account to the
-// application yet. Returns YES if the Dropbox account is linked, NO otherwise.
-//
-- (BOOL)checkLinked {
-    if(![[[DBAccountManager sharedManager] linkedAccount] isLinked]) {
-        [[[UIAlertView alloc] initWithTitle:@"No account found!"
-                                    message:@"Please link your Dropbox account in the Settings tab."
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-        return NO;
-    }
-    return YES;
-}
-
-//
-// Creates a new text file with the specified title.  If the file is created
-// successfully, switches to the detail view controller.
-//
-- (void) createNoteWithTitle:(NSString*)title {
-    NSString *fileName = [NSString stringWithFormat:@"%@.txt", title];
-    DBPath *path = [[DBPath root] childPath:fileName];
-    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:path error:nil];
-    
-    if (!file) {
-        [[[UIAlertView alloc] initWithTitle:@"Unable to create note!"
-                                    message:@"The filename may already exist."
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-    } else {
-        [_fileInfos addObject:file.info];
-        [self performSegueWithIdentifier:@"showDetail" sender:file];
-    }
-}
-
-//
-// Initializes the Dropbox account
-//
-- (void) initDBAccount {
-    DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
-    
-    if (account) {
-        DBFilesystem *filesystem = [[DBFilesystem alloc] initWithAccount:account];
-        [DBFilesystem setSharedFilesystem:filesystem];
-    }
-}
-
-//
 // Loads the note files from the Dropbox server.
 //
 - (void)loadFiles {
@@ -144,6 +95,27 @@
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         });
     });
+}
+
+//
+// Creates a new text file with the specified title.  If the file is created
+// successfully, switches to the detail view controller.
+//
+- (void)createNoteWithTitle:(NSString*)title {
+    NSString *fileName = [NSString stringWithFormat:@"%@.txt", title];
+    DBPath *path = [[DBPath root] childPath:fileName];
+    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:path error:nil];
+    
+    if (!file) {
+        [[[UIAlertView alloc] initWithTitle:@"Unable to create note!"
+                                    message:@"The filename may already exist."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+    } else {
+        [_fileInfos addObject:file.info];
+        [self performSegueWithIdentifier:@"showDetail" sender:file];
+    }
 }
 
 #pragma mark - Table View
@@ -173,6 +145,9 @@
     return YES;
 }
 
+//
+// Handles deletion of files.
+//
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
@@ -187,6 +162,8 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
+
+#pragma mark - Navigation
 
 //
 // Gives the detail controller the file to display.  The sender is either
