@@ -37,23 +37,18 @@
     
     [self initDBAccount];
     
-    BOOL isLinked = [self checkLinked];
-    if (isLinked) {
-        [self loadFiles];
-    }
-    
     [self.refreshControl addTarget:self
                             action:@selector(loadFiles)
                   forControlEvents:UIControlEventValueChanged];
 }
-/*
-- (void)viewWillAppear:(BOOL)animated {
+
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     BOOL isLinked = [self checkLinked];
     if (isLinked) {
         [self loadFiles];
     }
-} */
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -180,6 +175,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+        NSString *selectedCellText = selectedCell.textLabel.text;
+        
+        DBPath *path = [[DBPath root] childPath:[NSString stringWithFormat:@"%@.txt", selectedCellText]];
+        [[DBFilesystem sharedFilesystem] deletePath:path error:nil];
+        
         [_fileInfos removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -203,7 +204,6 @@
             [controller setFile:sender];
         } else {
             DBFileInfo *info = _fileInfos[indexPath.row];
-            
             DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
             if (!file) {
                 [[[UIAlertView alloc]
