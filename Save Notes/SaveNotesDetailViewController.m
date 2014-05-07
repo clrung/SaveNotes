@@ -68,4 +68,14 @@
     self.masterPopoverController = nil;
 }
 
+//
+// Updates the file to reflect any changes in the note before returning
+// to the Master.
+//
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [_file writeString:_detailTextView.text error:nil];
+}
+
 @end

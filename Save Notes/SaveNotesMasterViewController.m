@@ -31,32 +31,39 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayNewNoteAlert:)];
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (SaveNotesDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
     [self initDBAccount];
     
-    [self.refreshControl addTarget:self
-                            action:@selector(loadFiles)
-                  forControlEvents:UIControlEventValueChanged];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
     BOOL isLinked = [self checkLinked];
     if (isLinked) {
         [self loadFiles];
     }
+    
+    [self.refreshControl addTarget:self
+                            action:@selector(loadFiles)
+                  forControlEvents:UIControlEventValueChanged];
 }
+/*
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    BOOL isLinked = [self checkLinked];
+    if (isLinked) {
+        [self loadFiles];
+    }
+} */
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender {
+//
+// Displays an alert to get the title of the new note.
+//
+- (void)displayNewNoteAlert:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Create New Note"
                                                         message:@"Enter note title below"
                                                        delegate:self
@@ -64,24 +71,12 @@
                                               otherButtonTitles:@"Create", nil];
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alertView show];
-    
-    
-    
-    /*
-     
-     if (!_objects) {
-     _objects = [[NSMutableArray alloc] init];
-     }
-     [_objects insertObject:[NSDate date] atIndex:0];
-     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic]; */
 }
 
 //
 // Creates a new note with the text specified in the AlertView.
 //
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
     if (buttonIndex == alertView.firstOtherButtonIndex) {
         NSString *title = [alertView textFieldAtIndex:0].text;
         [self createNoteWithTitle:title];
@@ -95,7 +90,7 @@
 - (BOOL)checkLinked {
     if(![[[DBAccountManager sharedManager] linkedAccount] isLinked]) {
         [[[UIAlertView alloc] initWithTitle:@"No account found!"
-                                    message:@"Please go to settings and link your Dropbox account."
+                                    message:@"Please link your Dropbox account in the Settings tab."
                                    delegate:nil
                           cancelButtonTitle:@"OK"
                           otherButtonTitles:nil] show];
@@ -125,6 +120,9 @@
     }
 }
 
+//
+// Initializes the Dropbox account
+//
 - (void) initDBAccount {
     DBAccount *account = [[DBAccountManager sharedManager] linkedAccount];
     
@@ -134,16 +132,21 @@
     }
 }
 
+//
+// Loads the note files from the Dropbox server.
+//
 - (void)loadFiles {
     [self.refreshControl beginRefreshing];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
         NSArray *immContents = [[DBFilesystem sharedFilesystem] listFolder:[DBPath root] error:nil];
         NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
-        //[mContents sortUsingFunction:sortFileInfos context:NULL];
+        //[NSThread sleepForTimeInterval:2.0];         // tests network activity indicator
         dispatch_async(dispatch_get_main_queue(), ^() {
             _fileInfos = mContents;
             [self.tableView reloadData];
             [self.refreshControl endRefreshing];
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         });
     });
 }
@@ -167,8 +170,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
+
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -185,6 +187,12 @@
     }
 }
 
+//
+// Gives the detail controller the file to display.  The sender is either
+// a file or a table view item.  If it is a file, simply set the file to it.
+// If it is a table view item, open the file and then set the file to the
+// opened file.
+//
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         
