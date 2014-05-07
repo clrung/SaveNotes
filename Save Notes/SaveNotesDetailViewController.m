@@ -46,6 +46,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+//
+// Removes blank space at the top of the TextView.
+//
+- (BOOL)automaticallyAdjustsScrollViewInsets {
+    return NO;
+}
+
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController {
