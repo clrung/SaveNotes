@@ -36,6 +36,10 @@
     self.detailViewController = (SaveNotesDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
     [self initDBAccount];
+    
+    [self.refreshControl addTarget:self
+                            action:@selector(loadFiles)
+                  forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -131,6 +135,7 @@
 }
 
 - (void)loadFiles {
+    [self.refreshControl beginRefreshing];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
         NSArray *immContents = [[DBFilesystem sharedFilesystem] listFolder:[DBPath root] error:nil];
         NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
@@ -138,6 +143,7 @@
         dispatch_async(dispatch_get_main_queue(), ^() {
             _fileInfos = mContents;
             [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
         });
     });
 }
