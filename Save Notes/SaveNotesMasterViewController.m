@@ -11,7 +11,7 @@
 #import "DropboxUtils.h"
 #import <Dropbox/Dropbox.h>
 
-@interface SaveNotesMasterViewController () <UISearchDisplayDelegate>
+@interface SaveNotesMasterViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 @property (nonatomic, strong) NSMutableArray *tableData;
 @property (nonatomic, strong) NSMutableArray *searchResults;
 @end
@@ -26,6 +26,10 @@
     [super awakeFromNib];
 }
 
+//
+// Adds the edit and add buttons to the view controller, initializes the
+// Dropbox account, and initializes the refresh control.
+//
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -43,6 +47,9 @@
                   forControlEvents:UIControlEventValueChanged];
 }
 
+//
+// Loads the files from Dropbox if the user has linked their account.
+//
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     BOOL isLinked = [DropboxUtils checkLinked];
@@ -157,25 +164,26 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    if (tableView == self.searchDisplayController.searchResultsTableView)
         return _searchResults.count;
-    } else
+    else
         return _fileInfos.count;
 }
 
 //
-// Populates the TableView with the note titles.
+// Populates the main TableView or the search TableView with the notes' titles.
 //
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
     if (cell == nil) {
+        NSLog(@"cell is nil");
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
     
-    if (tableView == self.searchDisplayController.searchResultsTableView)
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
         cell.textLabel.text = [self.searchResults objectAtIndex:indexPath.row];
-    else {
+  }  else {
         DBFileInfo *fileInfo = _fileInfos[indexPath.row];
         cell.textLabel.text = [[fileInfo.path name] stringByDeletingPathExtension];
     }
@@ -183,13 +191,15 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-}
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        [self performSegueWithIdentifier:@"showDetail" sender:tableView];
+    }
 }
 
 //
@@ -218,7 +228,7 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     [self.searchResults removeAllObjects];
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"SELF contains %@", searchText];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"SELF contains[c] %@", searchText];
     self.searchResults = [NSMutableArray arrayWithArray: [self.tableData filteredArrayUsingPredicate:resultPredicate]];
 }
 
@@ -242,12 +252,22 @@
 //
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        
         SaveNotesDetailViewController *controller = segue.destinationViewController;
         
         if([sender isKindOfClass:[DBFile class]]) {
             [controller setFile:sender];
         } else {
+            //NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+            NSIndexPath *indexPath = nil;
+            
+            if(sender == self.searchDisplayController.searchResultsTableView) { // search results
+                indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+                NSLog(@"%@", indexPath );
+            } else {
+                indexPath = [self.tableView indexPathForSelectedRow];
+            }
+            
             DBFileInfo *info = _fileInfos[indexPath.row];
             DBFile *file = [self getFileFromFileInfo:info];
             [controller setFile:file];
