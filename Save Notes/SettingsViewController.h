@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingsViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UISlider *textSizeSlider;
+@property (weak, nonatomic) IBOutlet UILabel *textSizeLabel;
+- (IBAction)sliderValueChanged:(UISlider *)sender;
++ (CGFloat) getTextSize;
 
 @end

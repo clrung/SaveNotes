@@ -13,17 +13,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *linkButton;
 
 @end
-
+CGFloat textSize = 14;
 @implementation SettingsViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -58,9 +49,18 @@
     }
 }
 
+- (IBAction)sliderValueChanged:(UISlider *)sender
+{
+    textSize = sender.value;
+    _textSizeLabel.text =  [NSString stringWithFormat:@"%d", (int)sender.value];
+}
+
 - (void)updateButtons {
     NSString* title = [[[DBAccountManager sharedManager] linkedAccount] isLinked] ? @"Unlink Dropbox Account" : @"Link Dropbox Account";
     [self.linkButton setTitle:title forState:UIControlStateNormal];
 }
 
++ (CGFloat)getTextSize {
+    return textSize;
+}
 @end

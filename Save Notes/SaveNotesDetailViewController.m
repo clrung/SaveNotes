@@ -7,6 +7,7 @@
 //
 
 #import "SaveNotesDetailViewController.h"
+#import "SettingsViewController.h"
 #import <Dropbox/Dropbox.h>
 
 @interface SaveNotesDetailViewController ()
@@ -20,10 +21,8 @@
 
 #pragma mark - Managing the detail item
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self configureView];
 }
 
@@ -31,11 +30,16 @@
     _file = file;
 }
 
+//
+// Sets the title of the view to the note title and populates the TextView
+// with the note's contents.
+//
 - (void)configureView {
     // Update the user interface for the detail item.
     self.navigationItem.title = [[_file.info.path name] stringByDeletingPathExtension];
     [_detailTextView setText:[_file readString:nil]];
-    
+    CGFloat fontSize = [SettingsViewController getTextSize];
+    [_detailTextView setFont:[UIFont fontWithName:@"Helvetica Neue" size:fontSize]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,7 +61,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [_file writeString:_detailTextView.text error:nil];
-    [_file close];
 }
 
 #pragma mark - Split view
