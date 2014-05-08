@@ -14,5 +14,7 @@
 
 + (BOOL)checkLinked;
 + (void)initDBAccount;
++ (DBFile*)getFileFromFileInfo:(DBFileInfo *)info;
++ (NSString*)getFileTitleAndContents:(DBFileInfo *)info;
 
 @end

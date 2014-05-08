@@ -38,4 +38,31 @@
     }
 }
 
+#pragma mark - File Operations
+
+//
+// Returns the file corresponding to the passed DBFileInfo object.
+//
++ (DBFile*)getFileFromFileInfo:(DBFileInfo *)info {
+    DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
+    if (!file) {
+        [[[UIAlertView alloc]
+          initWithTitle:@"Unable to open note!" message:@"An error has occurred."
+          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+    
+    return file;
+}
+
+//
+// Returns the file info's title and contents of the note
+//
++ (NSString*)getFileTitleAndContents:(DBFileInfo *)info {
+    DBFile *file = [self getFileFromFileInfo:info];
+    NSString *contents = [file readString:nil];
+    NSString *title = [[[info path] name] stringByDeletingPathExtension];
+    
+    return [NSString stringWithFormat:@"%@\n%@", title, contents];
+}
+
 @end

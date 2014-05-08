@@ -12,8 +12,8 @@
 #import <Dropbox/Dropbox.h>
 
 @interface SaveNotesMasterViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
-@property (nonatomic, strong) NSMutableArray *tableData;
 @property (nonatomic, strong) NSMutableArray *searchResults;
+@property (nonatomic, strong) NSMutableArray *tableData;
 @end
 
 @implementation SaveNotesMasterViewController
@@ -120,9 +120,9 @@
             
             self.tableData = [[NSMutableArray alloc] init];
             for(DBFileInfo *info in _fileInfos) {
-                [self.tableData addObject:[self getFileTitleAndContents:info]];
+                [self.tableData addObject:[DropboxUtils getFileTitleAndContents:info]];
             }
-            
+
             self.searchResults = [NSMutableArray arrayWithCapacity:_fileInfos.count];
 
             [self.tableView reloadData];
@@ -130,31 +130,6 @@
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         });
     });
-}
-
-//
-// Returns the file corresponding to the passed DBFileInfo object.
-//
-- (DBFile*)getFileFromFileInfo:(DBFileInfo *)info {
-    DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
-    if (!file) {
-        [[[UIAlertView alloc]
-          initWithTitle:@"Unable to open note!" message:@"An error has occurred."
-          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-    }
-    
-    return file;
-}
-
-//
-// Returns the file info's title and contents of the note
-//
-- (NSString*)getFileTitleAndContents:(DBFileInfo *)info {
-    DBFile *file = [self getFileFromFileInfo:info];
-    NSString *contents = [file readString:nil];
-    NSString *title = [[[info path] name] stringByDeletingPathExtension];
-    
-    return [NSString stringWithFormat:@"%@\n%@", title, contents];
 }
 
 #pragma mark - Table View
@@ -258,18 +233,16 @@
         if([sender isKindOfClass:[DBFile class]]) {
             [controller setFile:sender];
         } else {
-            //NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
             NSIndexPath *indexPath = nil;
             
-            if(sender == self.searchDisplayController.searchResultsTableView) { // search results
+            if(sender == self.searchDisplayController.searchResultsTableView) {
                 indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
-                NSLog(@"%@", indexPath );
             } else {
                 indexPath = [self.tableView indexPathForSelectedRow];
             }
             
             DBFileInfo *info = _fileInfos[indexPath.row];
-            DBFile *file = [self getFileFromFileInfo:info];
+            DBFile *file = [DropboxUtils getFileFromFileInfo:info];
             [controller setFile:file];
         }
     }
