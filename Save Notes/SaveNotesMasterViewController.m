@@ -11,8 +11,9 @@
 #import "DropboxUtils.h"
 #import <Dropbox/Dropbox.h>
 
-@interface SaveNotesMasterViewController ()
-
+@interface SaveNotesMasterViewController () <UISearchDisplayDelegate>
+@property (nonatomic, strong) NSMutableArray *tableData;
+@property (nonatomic, strong) NSMutableArray *searchResults;
 @end
 
 @implementation SaveNotesMasterViewController
@@ -79,25 +80,6 @@
 }
 
 //
-// Loads the note files from the Dropbox server.
-//
-- (void)loadFiles {
-    [self.refreshControl beginRefreshing];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-        NSArray *immContents = [[DBFilesystem sharedFilesystem] listFolder:[DBPath root] error:nil];
-        NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
-        //[NSThread sleepForTimeInterval:2.0];         // tests network activity indicator
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            _fileInfos = mContents;
-            [self.tableView reloadData];
-            [self.refreshControl endRefreshing];
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        });
-    });
-}
-
-//
 // Creates a new text file with the specified title.  If the filename already
 // exists, the application will open the existing note.  If not, it will open
 // a new note in the detail view controller.
@@ -116,6 +98,58 @@
     [self performSegueWithIdentifier:@"showDetail" sender:file];
 }
 
+//
+// Loads the note files from the Dropbox server.
+//
+- (void)loadFiles {
+    [self.refreshControl beginRefreshing];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+        NSArray *immContents = [[DBFilesystem sharedFilesystem] listFolder:[DBPath root] error:nil];
+        NSMutableArray *mContents = [NSMutableArray arrayWithArray:immContents];
+        //[NSThread sleepForTimeInterval:2.0];         // tests network activity indicator
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            _fileInfos = mContents;
+            
+            self.tableData = [[NSMutableArray alloc] init];
+            for(DBFileInfo *info in _fileInfos) {
+                [self.tableData addObject:[self getFileTitleAndContents:info]];
+            }
+            
+            self.searchResults = [NSMutableArray arrayWithCapacity:_fileInfos.count];
+
+            [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        });
+    });
+}
+
+//
+// Returns the file corresponding to the passed DBFileInfo object.
+//
+- (DBFile*)getFileFromFileInfo:(DBFileInfo *)info {
+    DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
+    if (!file) {
+        [[[UIAlertView alloc]
+          initWithTitle:@"Unable to open note!" message:@"An error has occurred."
+          delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+    
+    return file;
+}
+
+//
+// Returns the file info's title and contents of the note
+//
+- (NSString*)getFileTitleAndContents:(DBFileInfo *)info {
+    DBFile *file = [self getFileFromFileInfo:info];
+    NSString *contents = [file readString:nil];
+    NSString *title = [[[info path] name] stringByDeletingPathExtension];
+    
+    return [NSString stringWithFormat:@"%@\n%@", title, contents];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -123,14 +157,29 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _fileInfos.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return _searchResults.count;
+    } else
+        return _fileInfos.count;
 }
 
+//
+// Populates the TableView with the note titles.
+//
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
-    DBFileInfo *fileInfo = _fileInfos[indexPath.row];
-    cell.textLabel.text = [[fileInfo.path name] stringByDeletingPathExtension];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+    }
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        cell.textLabel.text = [self.searchResults objectAtIndex:indexPath.row];
+    else {
+        DBFileInfo *fileInfo = _fileInfos[indexPath.row];
+        cell.textLabel.text = [[fileInfo.path name] stringByDeletingPathExtension];
+    }
+    
     return cell;
 }
 
@@ -144,7 +193,7 @@
 }
 
 //
-// Handles deletion of files.
+// Removes the cell from the TableView and also deletes the file from Dropbox.
 //
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -161,6 +210,28 @@
     }
 }
 
+#pragma mark - Searching
+
+//
+// Populates the search results with the results of user's query.
+//
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    [self.searchResults removeAllObjects];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"SELF contains %@", searchText];
+    self.searchResults = [NSMutableArray arrayWithArray: [self.tableData filteredArrayUsingPredicate:resultPredicate]];
+}
+
+//
+// Reloads the table with the search results.
+//
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    return YES;
+}
+
 #pragma mark - Navigation
 
 //
@@ -171,7 +242,6 @@
 //
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         SaveNotesDetailViewController *controller = segue.destinationViewController;
         
@@ -179,13 +249,7 @@
             [controller setFile:sender];
         } else {
             DBFileInfo *info = _fileInfos[indexPath.row];
-            DBFile *file = [[DBFilesystem sharedFilesystem] openFile:info.path error:nil];
-            if (!file) {
-                [[[UIAlertView alloc]
-                  initWithTitle:@"Unable to open note!" message:@"An error has occurred."
-                  delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                return;
-            }
+            DBFile *file = [self getFileFromFileInfo:info];
             [controller setFile:file];
         }
     }
