@@ -98,24 +98,22 @@
 }
 
 //
-// Creates a new text file with the specified title.  If the file is created
-// successfully, switches to the detail view controller.
+// Creates a new text file with the specified title.  If the filename already
+// exists, the application will open the existing note.  If not, it will open
+// a new note in the detail view controller.
 //
 - (void)createNoteWithTitle:(NSString*)title {
     NSString *fileName = [NSString stringWithFormat:@"%@.txt", title];
     DBPath *path = [[DBPath root] childPath:fileName];
-    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:path error:nil];
+    DBError *error;
+    DBFile *file = [[DBFilesystem sharedFilesystem] createFile:path error:&error];
     
-    if (!file) {
-        [[[UIAlertView alloc] initWithTitle:@"Unable to create note!"
-                                    message:@"The filename may already exist."
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-    } else {
-        [_fileInfos addObject:file.info];
-        [self performSegueWithIdentifier:@"showDetail" sender:file];
+    if (error) {
+        file = [[DBFilesystem sharedFilesystem] openFile:path error:nil];
     }
+    
+    [_fileInfos addObject:file.info];
+    [self performSegueWithIdentifier:@"showDetail" sender:file];
 }
 
 #pragma mark - Table View

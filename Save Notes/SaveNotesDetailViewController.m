@@ -52,11 +52,12 @@
 
 //
 // Updates the file to reflect any changes in the note before returning
-// to the Master.
+// to the Master, and closes the file.
 //
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [_file writeString:_detailTextView.text error:nil];
+    [_file close];
 }
 
 #pragma mark - Split view
