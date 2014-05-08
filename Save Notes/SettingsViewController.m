@@ -49,17 +49,28 @@ CGFloat textSize = 14;
     }
 }
 
+//
+// Changes the state of textSize and the label to reflect the current slider
+// position.
+//
 - (IBAction)sliderValueChanged:(UISlider *)sender
 {
     textSize = sender.value;
     _textSizeLabel.text =  [NSString stringWithFormat:@"%d", (int)sender.value];
 }
 
+//
+// Toggles the link button between the two states depending on whether or not
+// the Dropbox account is linked.
+//
 - (void)updateButtons {
     NSString* title = [[[DBAccountManager sharedManager] linkedAccount] isLinked] ? @"Unlink Dropbox Account" : @"Link Dropbox Account";
     [self.linkButton setTitle:title forState:UIControlStateNormal];
 }
 
+//
+// Returns the text size
+//
 + (CGFloat)getTextSize {
     return textSize;
 }
