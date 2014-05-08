@@ -234,14 +234,24 @@
             [controller setFile:sender];
         } else {
             NSIndexPath *indexPath = nil;
+            DBFileInfo *info = nil;
             
             if(sender == self.searchDisplayController.searchResultsTableView) {
                 indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+                
+                // Hello Professor, this is why the search isn't working...
+                // The info is populated from the main, big list. This should
+                // be changed to the filtered array, but I don't have a filtered
+                // array of DBFileInfos :(
+                info = _fileInfos[indexPath.row];
+                
+                
+
             } else {
                 indexPath = [self.tableView indexPathForSelectedRow];
+                info = _fileInfos[indexPath.row];
             }
             
-            DBFileInfo *info = _fileInfos[indexPath.row];
             DBFile *file = [DropboxUtils getFileFromFileInfo:info];
             [controller setFile:file];
         }
