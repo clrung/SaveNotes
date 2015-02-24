@@ -45,6 +45,10 @@
     [self.refreshControl addTarget:self
                             action:@selector(loadFiles)
                   forControlEvents:UIControlEventValueChanged];
+    
+    // sets appropriate cell spacing
+    self.tableView.estimatedRowHeight = 68.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 //
@@ -52,8 +56,7 @@
 //
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    BOOL isLinked = [DropboxUtils checkLinked];
-    if (isLinked) {
+    if ([DropboxUtils checkLinked]) {
         [self loadFiles];
     }
 }
@@ -152,7 +155,6 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     
     if (cell == nil) {
-        NSLog(@"cell is nil");
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
     
@@ -190,8 +192,6 @@
         
         [_fileInfos removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
 

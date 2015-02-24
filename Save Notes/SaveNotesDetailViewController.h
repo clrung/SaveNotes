@@ -13,8 +13,6 @@
 
 @interface SaveNotesDetailViewController : UIViewController <UISplitViewControllerDelegate>
 
-@property (strong, nonatomic) id detailItem;
-
 @property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 
 - (void)setFile:(DBFile *)file;

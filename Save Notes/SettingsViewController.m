@@ -43,7 +43,7 @@ CGFloat textSize = 14;
         [[[DBAccountManager sharedManager] linkedAccount] unlink];
         
         [[[UIAlertView alloc]
-          initWithTitle:@"Account Unlinked!" message:@"Your dropbox account has been unlinked"
+          initWithTitle:@"Account Unlinked!" message:@"Your Dropbox account has been unlinked"
           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
           [self updateButtons];
     }
@@ -56,7 +56,7 @@ CGFloat textSize = 14;
 - (IBAction)sliderValueChanged:(UISlider *)sender
 {
     textSize = sender.value;
-    _textSizeLabel.text =  [NSString stringWithFormat:@"%d", (int)sender.value];
+    _textSizeLabel.text =  [NSString stringWithFormat:@"Note text size: %d", (int)sender.value];
 }
 
 //

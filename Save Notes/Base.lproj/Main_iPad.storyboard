@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="FM7-zL-61D">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FM7-zL-61D">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--Tab Bar Controller-->
@@ -21,9 +21,9 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G6Y-Kx-gsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1383" y="146"/>
+            <point key="canvasLocation" x="-1080.46875" y="85.546875"/>
         </scene>
-        <!--Settings View Controller - Settings-->
+        <!--Settings-->
         <scene sceneID="urN-yX-czC">
             <objects>
                 <viewController id="Zzp-m8-UcA" customClass="SettingsViewController" sceneMemberID="viewController">
@@ -32,12 +32,11 @@
                         <viewControllerLayoutGuide type="bottom" id="gpq-aI-Lxm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="184-WC-jrs">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9HH-oG-Sw7">
-                                <rect key="frame" x="279" y="399" width="211" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="195" y="160" width="211" height="30"/>
                                 <state key="normal" title="Link Dropbox Account">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -45,26 +44,23 @@
                                     <action selector="didTouchLink:" destination="Zzp-m8-UcA" eventType="touchUpInside" id="4ld-n5-C69"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="14" minValue="8" maxValue="36" translatesAutoresizingMaskIntoConstraints="NO" id="dU6-DX-udG">
-                                <rect key="frame" x="252" y="595" width="265" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="sliderValueChanged:" destination="Zzp-m8-UcA" eventType="valueChanged" id="fkT-vd-1nO"/>
-                                </connections>
-                            </slider>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Note text size:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KSN-EA-xUx">
                                 <rect key="frame" x="315" y="566" width="120" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="14" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xPQ-Uu-v8j">
                                 <rect key="frame" x="427" y="566" width="24" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="14" minValue="8" maxValue="36" translatesAutoresizingMaskIntoConstraints="NO" id="dU6-DX-udG">
+                                <rect key="frame" x="188" y="314" width="265" height="31"/>
+                                <connections>
+                                    <action selector="sliderValueChanged:" destination="Zzp-m8-UcA" eventType="valueChanged" id="fkT-vd-1nO"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -77,9 +73,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qJo-0G-Y3j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-361" y="782"/>
+            <point key="canvasLocation" x="-265" y="539"/>
         </scene>
-        <!--Navigation Controller - Notes-->
+        <!--Notes-->
         <scene sceneID="US2-Ej-N3q">
             <objects>
                 <navigationController id="sz1-ZF-uzk" sceneMemberID="viewController">
@@ -94,18 +90,18 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mdQ-A6-99a" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-477" y="-610"/>
+            <point key="canvasLocation" x="-372.65625" y="-357.421875"/>
         </scene>
-        <!--Save Notes Master View Controller - Master-->
+        <!--Master-->
         <scene sceneID="rH4-ZZ-jDf">
             <objects>
                 <tableViewController title="Master" id="g1S-OB-BZc" customClass="SaveNotesMasterViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ybL-1E-s8f">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" placeholder="Search notes" id="SRB-CB-Qee">
-                            <rect key="frame" x="0.0" y="64" width="768" height="44"/>
+                            <rect key="frame" x="0.0" y="64" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
@@ -131,7 +127,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="f4P-kN-IjO" kind="push" identifier="showDetail" id="nPj-IS-nJM"/>
+                                    <segue destination="f4P-kN-IjO" kind="show" identifier="showDetail" id="nPj-IS-nJM"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -160,9 +156,9 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="427" y="-610"/>
+            <point key="canvasLocation" x="333.59375" y="-357.421875"/>
         </scene>
-        <!--Save Notes Detail View Controller - Detail-->
+        <!--Detail-->
         <scene sceneID="KsD-VP-z9r">
             <objects>
                 <viewController storyboardIdentifier="Detail" title="Detail" id="f4P-kN-IjO" customClass="SaveNotesDetailViewController" sceneMemberID="viewController">
@@ -171,12 +167,11 @@
                         <viewControllerLayoutGuide type="bottom" id="H2A-Rb-y6J"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="mas-BC-ZJG">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MQm-fO-Mwa">
-                                <rect key="frame" x="0.0" y="65" width="768" height="909"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="0.0" y="65" width="600" height="485"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -198,16 +193,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B9X-uq-znE" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1296" y="-632"/>
+            <point key="canvasLocation" x="1012.5" y="-370.3125"/>
         </scene>
     </scenes>
     <resources>
         <image name="home" width="26" height="26"/>
         <image name="settings" width="26" height="26"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
-    </simulatedMetricsContainer>
 </document>

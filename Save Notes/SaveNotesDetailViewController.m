@@ -56,7 +56,7 @@
 
 //
 // Updates the file to reflect any changes in the note before returning
-// to the Master, and closes the file.
+// to the Master.
 //
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
